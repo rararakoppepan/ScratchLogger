@@ -5,14 +5,6 @@ import Foundation
 import WatchConnectivity
 
 final class WatchSessionManager: NSObject, WCSessionDelegate {
-    func sessionDidBecomeInactive(_ session: WCSession) {
-        
-    }
-    
-    func sessionDidDeactivate(_ session: WCSession) {
-        
-    }
-    
 
     static let shared = WatchSessionManager()
 
