@@ -507,6 +507,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = ScratchLoggerWatch;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_NSMotionUsageDescription = "掻き動作の検出のため、加速度センサーとジャイロスコープを使用します。";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.yourname.ScratchLogger.ScratchLogger;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -540,6 +541,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = ScratchLoggerWatch;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_NSMotionUsageDescription = "掻き動作の検出のため、加速度センサーとジャイロスコープを使用します。";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.yourname.ScratchLogger.ScratchLogger;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
