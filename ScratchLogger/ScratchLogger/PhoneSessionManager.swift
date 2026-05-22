@@ -103,7 +103,7 @@ final class PhoneSessionManager: NSObject, WCSessionDelegate, ObservableObject {
     private func appendToMeta(_ line: String) {
         guard let data = line.data(using: .utf8),
               let handle = try? FileHandle(forWritingTo: metaURL) else { return }
-        try? handle.seekToEnd()
+        _ = try? handle.seekToEnd()
         try? handle.write(contentsOf: data)
         try? handle.close()
     }
