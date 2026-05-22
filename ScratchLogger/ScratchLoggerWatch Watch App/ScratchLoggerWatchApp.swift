@@ -1,17 +1,17 @@
-//
-//  ScratchLoggerWatchApp.swift
-//  ScratchLoggerWatch Watch App
-//
-//  Created by Takuma Shirasawa on 2026/05/19.
-//
+// ScratchLoggerWatchApp.swift
+// Watch App
 
 import SwiftUI
 
 @main
-struct ScratchLoggerWatch_Watch_AppApp: App {
+struct ScratchLoggerWatchApp: App {
+
+    // WatchSessionManager を起動時に初期化
+    private let sessionManager = WatchSessionManager.shared
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            WatchContentView()
         }
     }
 }

@@ -8,10 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		31300E2A2FBC113F00A30211 /* ScratchLoggerWatch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 31300E292FBC113F00A30211 /* ScratchLoggerWatch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		31300EAA2FBC0F8200A30211 /* ScratchLoggerWatch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 31300E292FBC113F00A30211 /* ScratchLoggerWatch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		31300E2B2FBC113F00A30211 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31300E032FBC0F8200A30211 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 31300E282FBC113F00A30211;
+			remoteInfo = "ScratchLoggerWatch Watch App";
+		};
+		31300EAB2FBC0F8200A30211 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 31300E032FBC0F8200A30211 /* Project object */;
 			proxyType = 1;
@@ -28,6 +36,17 @@
 			dstSubfolderSpec = 16;
 			files = (
 				31300E2A2FBC113F00A30211 /* ScratchLoggerWatch Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		31300EAC2FBC0F8200A30211 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				31300EAA2FBC0F8200A30211 /* ScratchLoggerWatch Watch App.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -113,10 +132,12 @@
 				31300E072FBC0F8200A30211 /* Sources */,
 				31300E082FBC0F8200A30211 /* Frameworks */,
 				31300E092FBC0F8200A30211 /* Resources */,
+				31300EAC2FBC0F8200A30211 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				31300EAD2FBC0F8200A30211 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				31300E0D2FBC0F8200A30211 /* ScratchLogger */,
@@ -272,6 +293,11 @@
 			target = 31300E282FBC113F00A30211 /* ScratchLoggerWatch Watch App */;
 			targetProxy = 31300E2B2FBC113F00A30211 /* PBXContainerItemProxy */;
 		};
+		31300EAD2FBC0F8200A30211 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 31300E282FBC113F00A30211 /* ScratchLoggerWatch Watch App */;
+			targetProxy = 31300EAB2FBC0F8200A30211 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
@@ -407,9 +433,9 @@
 				DEVELOPMENT_TEAM = TMF22FPJ67;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				INFOPLIST_KEY_UIFileSharingEnabled = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -444,9 +470,9 @@
 				DEVELOPMENT_TEAM = TMF22FPJ67;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				INFOPLIST_KEY_UIFileSharingEnabled = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -481,7 +507,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = ScratchLoggerWatch;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.yourname.ScratchLogger.ScratchLoggerWatch;
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.yourname.ScratchLogger.ScratchLogger;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -514,7 +540,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = ScratchLoggerWatch;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.yourname.ScratchLogger.ScratchLoggerWatch;
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.yourname.ScratchLogger.ScratchLogger;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
