@@ -513,7 +513,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.yourname.ScratchLogger.ScratchLoggerWatch.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yourname.ScratchLogger.ScratchLogger.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -546,7 +546,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.yourname.ScratchLogger.ScratchLoggerWatch.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yourname.ScratchLogger.ScratchLogger.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
