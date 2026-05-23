@@ -1,5 +1,5 @@
 // WatchContentView.swift
-// Watch Extension
+// Watch App
 
 import SwiftUI
 
@@ -9,7 +9,6 @@ struct WatchContentView: View {
     var body: some View {
         ZStack {
             mainContent
-            // 記録完了オーバーレイ
             if vm.showConfirmation {
                 confirmationOverlay
                     .transition(.opacity.combined(with: .scale))
@@ -24,17 +23,8 @@ struct WatchContentView: View {
         ScrollView {
             VStack(spacing: 10) {
 
-                // セッション件数 + ステータス
-                HStack {
-                    Label("\(vm.sessionCount)件記録", systemImage: "checkmark.circle.fill")
-                        .font(.system(size: 11))
-                        .foregroundStyle(.green)
-                    Spacer()
-                    Text(vm.statusText.prefix(12))
-                        .font(.system(size: 10))
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                }
+                // 接続状態バー
+                connectionBar
 
                 Divider()
 
@@ -83,6 +73,39 @@ struct WatchContentView: View {
         }
     }
 
+    // MARK: - 接続状態バー
+
+    private var connectionBar: some View {
+        HStack(spacing: 6) {
+            // 接続インジケーター（●）
+            Circle()
+                .fill(connectionColor)
+                .frame(width: 8, height: 8)
+
+            Text(vm.connectionState.label)
+                .font(.system(size: 11))
+                .foregroundStyle(.secondary)
+
+            Spacer()
+
+            // 記録件数 or 送信待ちバッジ
+            if vm.pendingCount > 0 {
+                // 送信待ちがある場合は件数を目立たせる
+                HStack(spacing: 2) {
+                    Image(systemName: "clock.arrow.2.circlepath")
+                        .font(.system(size: 10))
+                    Text("\(vm.pendingCount)件待機")
+                        .font(.system(size: 10))
+                }
+                .foregroundStyle(.orange)
+            } else {
+                Label("\(vm.sessionCount)件", systemImage: "checkmark.circle.fill")
+                    .font(.system(size: 11))
+                    .foregroundStyle(.green)
+            }
+        }
+    }
+
     // MARK: - 確認オーバーレイ
 
     private var confirmationOverlay: some View {
@@ -90,8 +113,14 @@ struct WatchContentView: View {
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 36))
                 .foregroundStyle(vm.lastLabel == "scratch" ? .red : .blue)
-            Text(vm.lastLabel == "scratch" ? "記録しました" : "記録しました")
+            Text("記録しました")
                 .font(.system(size: 13, weight: .semibold))
+            // 未送信なら補足メッセージ
+            if vm.pendingCount > 0 {
+                Text("接続後に自動送信")
+                    .font(.system(size: 10))
+                    .foregroundStyle(.orange)
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.ultraThinMaterial)
@@ -99,6 +128,15 @@ struct WatchContentView: View {
     }
 
     // MARK: - ヘルパー
+
+    private var connectionColor: Color {
+        switch vm.connectionState {
+        case .connected:    return .green
+        case .connecting:   return .orange
+        case .disconnected: return .gray
+        case .error:        return .red
+        }
+    }
 
     private func itchColor(_ level: Int) -> Color {
         switch level {

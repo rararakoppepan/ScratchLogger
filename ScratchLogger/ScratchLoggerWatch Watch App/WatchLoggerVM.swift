@@ -1,5 +1,5 @@
 // WatchLoggerVM.swift
-// Watch Extension
+// Watch App
 
 import SwiftUI
 import Combine
@@ -7,20 +7,29 @@ import Combine
 final class WatchLoggerVM: NSObject, ObservableObject {
 
     @Published var itchLevel: Int = 5
-    @Published var statusText: String = "待機中..."
     @Published var isSending: Bool = false
-    @Published var sessionCount: Int = 0      // このセッションで記録した件数
+    @Published var sessionCount: Int = 0
     @Published var showConfirmation: Bool = false
     @Published var lastLabel: String = ""
+    @Published var statusText: String = "接続中..."
+    @Published var connectionState: WatchSessionManager.ConnectionState = .connecting
+    @Published var pendingCount: Int = 0   // iPhoneへの送信待ち件数
 
     private let recorder = MotionRecorder()
-    private let session = WatchSessionManager.shared
+    private let session  = WatchSessionManager.shared
 
     override init() {
         super.init()
         recorder.start()
+
         session.onStatusUpdate = { [weak self] message in
             self?.statusText = message
+        }
+        session.onConnectionStateChange = { [weak self] state in
+            self?.connectionState = state
+        }
+        session.onPendingCountChange = { [weak self] count in
+            self?.pendingCount = count
         }
     }
 
@@ -36,12 +45,10 @@ final class WatchLoggerVM: NSObject, ObservableObject {
         session.send(samples: samples, label: label, itchLevel: itchLevel)
         sessionCount += 1
 
-        // 確認アニメーションを1.5秒表示
         showConfirmation = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             self.showConfirmation = false
         }
-
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.isSending = false
         }
