@@ -21,6 +21,10 @@ private struct ItchEntry: Identifiable {
     let level: Int
 }
 
+// MARK: - Collection Goal
+
+private let collectionGoal = 50
+
 // MARK: - Main View
 
 struct PhoneContentView: View {
@@ -33,7 +37,7 @@ struct PhoneContentView: View {
         switch filter {
         case .all:     return session.logs
         case .scratch: return session.logs.filter { $0.label == "scratch" }
-        case .normal:  return session.logs.filter { $0.label == "normal" }
+        case .normal:  return session.logs.filter { $0.label.hasPrefix("normal") }
         }
     }
 
@@ -54,6 +58,10 @@ struct PhoneContentView: View {
     }
     private var todayMaxItch: Int { todayScratch.map(\.itchLevel).max() ?? 0 }
 
+    // 全期間の収集カウント
+    private var totalScratch: Int { session.logs.filter { $0.label == "scratch" }.count }
+    private var totalNormal:  Int { session.logs.filter { $0.label.hasPrefix("normal") }.count }
+
     private var chartEntries: [ItchEntry] {
         todayScratch.compactMap { log in
             guard let d = tsParser.date(from: log.timestamp) else { return nil }
@@ -66,6 +74,11 @@ struct PhoneContentView: View {
     var body: some View {
         NavigationStack {
             List {
+                // 収集進捗（常に表示）
+                Section("ML用データ収集") {
+                    collectionProgress
+                }
+
                 // 今日のサマリー（記録があるときだけ）
                 if !todayScratch.isEmpty {
                     Section("今日のサマリー") {
@@ -133,6 +146,80 @@ struct PhoneContentView: View {
         }
     }
 
+    // MARK: - Collection Progress
+
+    private var collectionProgress: some View {
+        VStack(spacing: 12) {
+            progressBar(
+                label: "掻き",
+                count: totalScratch,
+                goal: collectionGoal,
+                color: .red,
+                icon: "hand.raised.fill"
+            )
+            progressBar(
+                label: "通常動作",
+                count: totalNormal,
+                goal: collectionGoal,
+                color: .blue,
+                icon: "figure.walk"
+            )
+
+            if totalScratch >= collectionGoal && totalNormal >= collectionGoal {
+                HStack(spacing: 6) {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundStyle(.green)
+                    Text("データ収集完了！Create MLでモデルを作れます")
+                        .font(.caption)
+                        .foregroundStyle(.green)
+                }
+                .padding(.top, 4)
+            } else {
+                let remaining = max(collectionGoal - totalScratch, 0) + max(collectionGoal - totalNormal, 0)
+                Text("あと \(remaining) 件でモデル学習できます")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .padding(.vertical, 4)
+    }
+
+    @ViewBuilder
+    private func progressBar(
+        label: String, count: Int, goal: Int, color: Color, icon: String
+    ) -> some View {
+        VStack(spacing: 4) {
+            HStack {
+                Image(systemName: icon)
+                    .font(.caption)
+                    .foregroundStyle(color)
+                Text(label)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Text("\(count) / \(goal)")
+                    .font(.caption.monospacedDigit())
+                    .foregroundStyle(count >= goal ? .green : .primary)
+                    .bold(count >= goal)
+            }
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(color.opacity(0.15))
+                        .frame(height: 8)
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(count >= goal ? Color.green : color)
+                        .frame(
+                            width: min(geo.size.width * CGFloat(count) / CGFloat(goal), geo.size.width),
+                            height: 8
+                        )
+                        .animation(.easeInOut, value: count)
+                }
+            }
+            .frame(height: 8)
+        }
+    }
+
     // MARK: - Stats Row
 
     private var statsRow: some View {
@@ -179,7 +266,6 @@ struct PhoneContentView: View {
                 .foregroundStyle(.secondary)
 
             Chart(chartEntries) { e in
-                // 塗りつぶしエリア
                 AreaMark(
                     x: .value("時刻", e.time),
                     yStart: .value("zero", 0),
@@ -193,7 +279,6 @@ struct PhoneContentView: View {
                 )
                 .interpolationMethod(.catmullRom)
 
-                // ライン
                 LineMark(
                     x: .value("時刻", e.time),
                     y: .value("レベル", e.level)
@@ -202,7 +287,6 @@ struct PhoneContentView: View {
                 .lineStyle(StrokeStyle(lineWidth: 2))
                 .interpolationMethod(.catmullRom)
 
-                // ポイント（色はレベルに応じて変化）
                 PointMark(
                     x: .value("時刻", e.time),
                     y: .value("レベル", e.level)
@@ -245,9 +329,7 @@ struct PhoneContentView: View {
             activityItems: items, applicationActivities: nil
         )
 
-        // iPad 向けポップオーバー設定
         if let popover = actVC.popoverPresentationController {
-            // ナビゲーションバーの共有ボタン付近を指す
             if let window = UIApplication.shared.connectedScenes
                 .compactMap({ $0 as? UIWindowScene })
                 .first(where: { $0.activationState == .foregroundActive })?
@@ -262,7 +344,6 @@ struct PhoneContentView: View {
             }
         }
 
-        // 最前面の ViewController から present
         guard let root = UIApplication.shared.connectedScenes
             .compactMap({ $0 as? UIWindowScene })
             .first(where: { $0.activationState == .foregroundActive })?
@@ -299,14 +380,14 @@ struct LogRow: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: log.label == "scratch" ? "hand.raised.fill" : "figure.walk")
+            Image(systemName: rowIcon)
                 .font(.title2)
-                .foregroundStyle(log.label == "scratch" ? .red : .blue)
+                .foregroundStyle(rowColor)
                 .frame(width: 36)
 
             VStack(alignment: .leading, spacing: 3) {
                 HStack {
-                    Text(log.label == "scratch" ? "掻き" : "通常")
+                    Text(rowTitle)
                         .font(.headline)
                         .foregroundStyle(log.label == "scratch" ? .red : .primary)
                     Spacer()
@@ -327,6 +408,33 @@ struct LogRow: View {
             }
         }
         .padding(.vertical, 4)
+    }
+
+    // ラベルに応じたアイコン・色・タイトルを返す
+    private var rowIcon: String {
+        switch log.label {
+        case "scratch":      return "hand.raised.fill"
+        case "normal_walk":  return "figure.walk"
+        case "normal_eat":   return "fork.knife"
+        case "normal_type":  return "keyboard"
+        case "normal_still": return "figure.stand"
+        default:             return "circle.fill"
+        }
+    }
+
+    private var rowColor: Color {
+        log.label == "scratch" ? .red : .blue
+    }
+
+    private var rowTitle: String {
+        switch log.label {
+        case "scratch":      return "掻き"
+        case "normal_walk":  return "通常（歩き）"
+        case "normal_eat":   return "通常（食事）"
+        case "normal_type":  return "通常（タイプ）"
+        case "normal_still": return "通常（静止）"
+        default:             return "通常"
+        }
     }
 
     private func itchColor(_ level: Int) -> Color {
